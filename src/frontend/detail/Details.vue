@@ -3,7 +3,7 @@
     <!-- <h3>我是details.vue</h3> -->
     <!-- 面包屑导航 -->
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item
         ><a href="javascript:;">笔记本电脑</a></el-breadcrumb-item
       >
