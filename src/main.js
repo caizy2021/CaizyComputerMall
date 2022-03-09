@@ -13,7 +13,7 @@ import './assets/css/global.css'
 // 配置axios
 import axios from 'axios'
 // 配置请求的根路径
-axios.defaults.baseURL = 'http://www.codeboy.com:9999/data/'
+axios.defaults.baseURL = 'http://127.0.0.1:9999/'
 Vue.prototype.$axios=axios
 
 // 配置element-ui

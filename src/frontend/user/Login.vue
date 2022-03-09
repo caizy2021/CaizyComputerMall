@@ -80,21 +80,36 @@ export default {
     },
 
     // 点击登录按钮，发送登录请求，返回登录结果
-    login() {
+    async login() {
       const uname = this.form.uname;
       const upwd = this.form.upwd;
-      const url = `user/login.php?uname=${uname}&upwd=${upwd}`;
-      // console.log(url);
-      
-      this.$axios.get(url).then((res) => {
+      const url = `user/login?uname=${uname}&upwd=${upwd}`;
+      // console.log(this.form);
+      const { data: res } = await this.$axios.get(url);
+      console.log(res);
+      if (!res.code == 200) {
+        this.$message.error("登录失败");
+        return;
+      }
+      // console.log(res.data.uid);
+      window.sessionStorage.setItem("uname", uname);
+      window.sessionStorage.setItem("uid", res.data.uid);
+      this.$message.success("登录成功");
+      // 跳转到主页index
+      this.$router.push("/main");
+
+      /**this.$axios.get(url).then((res) => {
         // console.log(`加载login...`);
-        // console.log(res);
+        // document.cookie='PHPSESSID=095d332d0297a892f8bfb2d29e2be037'
+        console.log(res);
+        // console.log(document.cookie);
+        // console.log(res.headers);
 
         // 验证返回信息
         if (res.data.code == 200) {
           // 登录成功
           // 修改vuex中的登录状态 islogin=1
-          this.$message.success("登录成功",);
+          this.$message.success("登录成功");
           // 把用户登录信息存入sessionStorage
           window.sessionStorage.setItem("uname", uname)
           // window.sessionStorage.setItem("uid", res.data.uid)
@@ -106,7 +121,7 @@ export default {
           this.$message.error("登录失败");
         }
       });
-
+*/
     },
   },
 };

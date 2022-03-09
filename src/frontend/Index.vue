@@ -57,6 +57,7 @@ export default {
   methods: {
     logout() {
       window.sessionStorage.clear();
+      this.$message.warning('退出成功');
       this.$router.push('/login')
     },
   },

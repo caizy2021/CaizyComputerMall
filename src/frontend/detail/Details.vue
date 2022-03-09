@@ -44,12 +44,7 @@
         <!-- 售价/服务承诺 -->
         <div class="price">
           <!-- 售价 -->
-          <div>
-            售价：<span
-              class="p_price"
-              v-text="`￥${p.price}`"
-            ></span>
-          </div>
+          <div>售价：<span class="p_price" v-text="`￥${p.price}`"></span></div>
           <!-- 服务承诺 -->
           <div>
             服务承诺：
@@ -99,7 +94,7 @@
 
         <!-- 购买部分 -->
         <div>
-          <el-button type="danger">加入购物车</el-button>
+          <el-button @click="toCart" type="danger">加入购物车</el-button>
           <el-button type="info" plain>立即购买</el-button>
           <el-button
             type="danger"
@@ -110,8 +105,6 @@
         </div>
       </div>
     </div>
-
-    
 
     <!-- 商品详情 -->
     <div class="product_details">
@@ -166,6 +159,12 @@ export default {
     };
   },
   methods: {
+    // 点击'加入购物车'时触发
+    toCart() {
+      // 跳转到购物车
+      this.$router.push("/cart");
+    },
+
     handleChange(value) {
       console.log(value);
     },
@@ -175,11 +174,15 @@ export default {
       this.i = i;
     },
     // 获取商品详情的方法
-    async getDetails(){
-      console.log(`页面内容挂载完成之后发送请求...`);
+    async getDetails() {
       const lid = this.$route.query.lid;
-      const url = "product/details.php?lid=" + lid;
-      const {data:res}=await this.$axios.get(url)
+      const url = "/details?lid=" + lid;
+      const { data: res } = await this.$axios.get(url);
+      console.log(res);
+      // console.log(res);
+      this.p = res.product;
+      this.specs = res.specs;
+      this.pics = res.pics;
     },
   },
   // 生命周期钩子 created
@@ -189,17 +192,18 @@ export default {
   // 页面内容挂载完成
   mounted() {
     console.log(`页面内容挂载完成之后发送请求...`);
-    let lid = this.$route.query.lid;
+    this.getDetails();
+    // let lid = this.$route.query.lid;
     // console.log("mountedlid:" + lid);
-    let url = "product/details.php?lid=" + lid;
+    // let url = "product/details.php?lid=" + lid;
     // console.log(url);
 
-    this.$axios.get(url).then((result) => {
-      console.log(result);
-      this.p = result.data.details;
-      this.specs = result.data.family.laptopList;
-      this.pics = result.data.details.picList;
-    });
+    // this.$axios.get(url).then((result) => {
+    //   console.log(result);
+    //   this.p = result.data.details;
+    //   this.specs = result.data.family.laptopList;
+    //   this.pics = result.data.details.picList;
+    // });
   },
 };
 </script>
@@ -317,7 +321,6 @@ export default {
     }
   }
 }
-
 
 // 商品详情
 .product_details {

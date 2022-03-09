@@ -1,38 +1,38 @@
 <template>
   <div>
+    <!-- 空状态 -->
     <div v-if="cart.length == 0">
       <el-empty description="购物车是空的..."></el-empty>
     </div>
-    <div v-else class="cart_main">
-      <!-- 收货地址 -->
-      <div class="cart_font">收货地址</div>
-      <div class="address">
-        <div v-text="address[0].receiver"></div>
-        <div v-text="address[0].cellphone"></div>
-        <div
-          v-text="address[0].city + address[0].county + address[0].address"
-        ></div>
-      </div>
-      <el-divider></el-divider>
-
-      <!-- 购物车项 -->
-      <a href="javascript:;" class="cart" v-for="(item,index) in cart" :key="index">
-        <div class="cart_item">
-          <div><img :src="item.md" alt=""></div>
-          <div>{{item.lname}}</div>
-          <div>{{item.price}} × {{item.count}}</div>
-          <el-checkbox v-model="checked">选购</el-checkbox>
+    <!-- msgdiv -->
+    <el-row class="msg_box">
+      <el-col :span="18"><p>商品</p></el-col>
+      <el-col :span="6"><p>单价（元）</p></el-col>
+      <el-col :span="6"><p>数量</p></el-col>
+      <el-col :span="6"><p>金额</p></el-col>
+    </el-row>
+    <!-- 购物车div -->
+    <el-row class="cart_box" v-for="(item, index) in laptop" :key="index">
+      <el-col :span="18">
+        <div>
+          <div>{{ item.title }}</div>
+          <div>规格：{{ item.spec }}</div>
         </div>
-        <el-divider></el-divider>
-      </a>
-
-      <!-- 总价/提交订单 -->
-      <div class="submit">
-        <span>总价：￥1111</span>
-        <span>运费：￥0</span>
-        <span>优惠：-￥200</span>
-        <el-button type="danger">提交订单</el-button>
-      </div>
+      </el-col>
+      <el-col :span="6">
+        <div>{{ item.price }}</div>
+      </el-col>
+      <el-col :span="6">
+        <div>{{ item.count }}</div>
+      </el-col>
+      <el-col :span="6">
+        <div>{{ item.price * item.count }}</div>
+      </el-col>
+    </el-row>
+    <!-- 去结算 -->
+    <div class="js_box">
+      <p>合计（不含运费）：{{ total }}</p>
+      <el-button @click="toPay" type="primary">去结算</el-button>
     </div>
   </div>
 </template>
@@ -41,86 +41,84 @@
 export default {
   data() {
     return {
-      uid: sessionStorage.getItem("uid"),
-      // uid: 2,
-      cart: [],
-      address: {},
-      checked: true
+      user_id: sessionStorage.getItem("uid"), // 用户 user_id
+      cart: [], // 购物车数据
+      laptop: [], // 购物车对应的商品数据
+      total: 0,
     };
   },
   methods: {
-    // 请求用户地址方法
-    getAddress() {
-      let url = "address?uid=" + this.uid;
-      this.$axios.get(url).then((res) => {
-        this.address = res.data;
-        console.log(this.address);
-      });
+    // 点击'去结算'按钮触发
+    toPay() {
+      this.$router.push("/order");
     },
-    // 请求购物车方法
-    getCart() {
-      let url = "cartItems?uid=" + this.uid;
-      this.$axios.get(url).then((res) => {
-        // console.log(res);
-        this.cart = res.data;
-        console.log(this.cart);
+
+    // 请求我的购物车
+    async getMyCart() {
+      // 发送请求，获取我的购物车
+      const user_id = sessionStorage.getItem("uid");
+      const sql = "cart/detail?user_id=" + this.user_id;
+      const { data: res } = await this.$axios.get(sql);
+      // console.log(res);
+      this.cart = res.item;
+      this.laptop = res.laptop;
+      res.item.forEach((item) => {
+        // console.log(item);
+        // 获取索引 index
+        const index = res.item.indexOf(item);
+        // console.log(index);
+        // 保存数量 count
+        this.laptop[index].count = item.count;
+        // 计算总金额 total
+        this.total += item.count * this.laptop[index].price;
+        // console.log(this.total);
       });
+      // console.log(this.cart);
+      // console.log(this.laptop);
     },
   },
   // mounted 挂载时
   mounted() {
     console.log(`mounted挂载时...`);
-    // 用户地址方法
-    this.getAddress();
+    console.log(this.user_id);
     // 购物车方法
-    this.getCart();
+    this.getMyCart();
   },
 };
 </script>
 
 <style lang="less" scoped>
-.cart {
-  margin: 0;
-  padding: 0;
-  color: black;
-  text-decoration: none;
+.js_box p {
+  margin-right: 30px;
 }
-.submit {
+.js_box {
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #ddd;
+  box-shadow: 0 0 15px #aaa;
   display: flex;
-  justify-content: space-around;
+  justify-content: end;
   align-items: center;
 }
-img {
-  height: 198px;
-}
-.cart_item:hover{
-  background-color: #eee;
-}
-.cart_item {
+.cart_box {
+  // border: 1px solid gray;
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #fff;
+  // box-shadow: 0 0 15px #aaa;
   display: flex;
-  justify-content: space-between;
-  // width: 800px;
+}
+.msg_box {
+  margin-bottom: 15px;
+  background-color: #ddd;
+  box-shadow: 0 0 15px #aaa;
+  display: flex;
+}
+
+.el-col {
+  display: flex;
+  justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 20px;
-}
-.cart_main {
-  background-color: #fff;
-  box-shadow: 0 0 15px #aaa;
-  padding: 20px;
-  // height: 500px;
-}
-.cart_font {
-  font-size: 25px;
-  font-weight: bold;
-  padding-bottom: 10px;
-  border-bottom-style: solid;
-  margin-bottom: 20px;
-  color: orange;
-}
-.address {
-  display: flex;
-  justify-content: space-around;
-  width: 300px;
 }
 </style>

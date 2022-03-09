@@ -26,12 +26,12 @@
                 v-for="(item, index) in computer_item_lists.slice(0, 4)"
                 :key="index"
               >
-                <div
-                  class="sort_item_div"
-                >
-                <router-link
-                  :to="`/details?${(item.href || '').split('?')[1]}`"><img class="cpimg" :src="item.pic" alt="" /></router-link>
-                  
+                <div class="sort_item_div">
+                  <router-link
+                    :to="`/details?${(item.href || '').split('?')[1]}`"
+                    ><img class="cpimg" :src="item.pic" alt=""
+                  /></router-link>
+
                   <div class="sort_item_title" v-text="item.title"></div>
                   <a
                     href="javascript:;"
@@ -108,10 +108,10 @@
               :key="index"
             >
               <div class="column_item_div">
-                <router-link
-                  :to="`/details?${(item.href || '').split('?')[1]}`"
-                ><img class="cpimg" :src="item.pic" alt="" /></router-link>
-                
+                <router-link :to="`/details?${(item.href || '').split('?')[1]}`"
+                  ><img class="cpimg" :src="item.pic" alt=""
+                /></router-link>
+
                 <div class="column_item_title" v-text="item.title"></div>
                 <a
                   href="javascript:;"
@@ -135,8 +135,10 @@
               :key="index"
             >
               <div class="ranking_index" v-text="index"></div>
-              <router-link :to="`/details?${(item.href || '').split('?')[1]}`"><img :src="item.pic" alt="" /></router-link>
-              
+              <router-link :to="`/details?${(item.href || '').split('?')[1]}`"
+                ><img :src="item.pic" alt=""
+              /></router-link>
+
               <div class="ranking_title" v-text="item.title"></div>
             </div>
           </div>
@@ -181,9 +183,15 @@ export default {
   },
   methods: {
     // 加载轮播图列表数据
-    initCarousel() {
+    async initCarousel() {
       // 请求 加载轮播图
-      this.$axios.get("product/index.php").then((result) => {
+      const { data: res } = await this.$axios.get("carousel");
+      // console.log(res);
+      this.carousel_lists = res.data;
+      // console.log(this.carousel_lists);
+
+      // 请求 加载轮播图
+      /**this.$axios.get("carousel").then((result) => {
         console.log("轮播图数据/分类商品电脑数据");
         console.log(result);
 
@@ -193,20 +201,26 @@ export default {
         // });
 
         // 返回轮播图数据存入 carousel_lists
-        this.carousel_lists = result.data.carouselItems;
+        // this.carousel_lists = result.data.carouselItems;
         // 加载分类商品电脑数据存入 computer_item_lists
-        this.computer_item_lists = result.data.recommendedItems;
+        // this.computer_item_lists = result.data.recommendedItems;
         // console.log("carousel_lists");
         // console.log(this.carousel_lists);
       });
+      */
     },
 
     // 加载分类商品电脑数据
-    initComputerItem() {
+    async initComputerItem() {
       // 请求index 加载分类商品电脑数据
-      this.$axios.get("index").then((result) => {
+      const { data: res } = await this.$axios.get("index");
+      console.log(res);
+      this.computer_item_lists = res.data;
+
+      // 请求index 加载分类商品电脑数据
+      /**this.$axios.get("index").then((result) => {
         // console.log(`加载分类商品电脑数据`);
-        // console.log(result.data);
+        console.log(result);
 
         // 用require处理分类商品电脑图 替换当前carousel列表
         // result.data.forEach((item) => {
@@ -214,6 +228,7 @@ export default {
         // });
         // this.computer_item_lists = result.data;
       });
+      */
     },
   },
   // mounted：页面挂载时触发
@@ -221,13 +236,13 @@ export default {
     // 加载轮播图
     this.initCarousel();
     // 加载分类商品电脑数据
-    // this.initComputerItem();
+    this.initComputerItem();
   },
 };
 </script>
 
 <style lang="less" scoped>
-.cpimg{
+.cpimg {
   height: 150px;
   width: 198px;
   display: flex;
