@@ -4,35 +4,39 @@
     <div v-if="cart.length == 0">
       <el-empty description="购物车是空的..."></el-empty>
     </div>
-    <!-- msgdiv -->
-    <el-row class="msg_box">
-      <el-col :span="18"><p>商品</p></el-col>
-      <el-col :span="6"><p>单价（元）</p></el-col>
-      <el-col :span="6"><p>数量</p></el-col>
-      <el-col :span="6"><p>金额</p></el-col>
-    </el-row>
-    <!-- 购物车div -->
-    <el-row class="cart_box" v-for="(item, index) in laptop" :key="index">
-      <el-col :span="18">
-        <div>
-          <div>{{ item.title }}</div>
-          <div>规格：{{ item.spec }}</div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div>{{ item.price }}</div>
-      </el-col>
-      <el-col :span="6">
-        <div>{{ item.count }}</div>
-      </el-col>
-      <el-col :span="6">
-        <div>{{ item.price * item.count }}</div>
-      </el-col>
-    </el-row>
-    <!-- 去结算 -->
-    <div class="js_box">
-      <p>合计（不含运费）：{{ total }}</p>
-      <el-button @click="toPay" type="primary">去结算</el-button>
+    <div v-else>
+      <!-- 全部商品 -->
+      <div class="qbsp_box">全部商品</div>
+      <!-- msgdiv -->
+      <el-row class="msg_box">
+        <el-col :span="18"><p>商品</p></el-col>
+        <el-col :span="6"><p>单价（元）</p></el-col>
+        <el-col :span="6"><p>数量</p></el-col>
+        <el-col :span="6"><p>金额</p></el-col>
+      </el-row>
+      <!-- 购物车div -->
+      <el-row class="cart_box" v-for="(item, index) in laptop" :key="index">
+        <el-col :span="18">
+          <div>
+            <div>{{ item.title }}</div>
+            <div>规格：{{ item.spec }}</div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div>{{ item.price }}</div>
+        </el-col>
+        <el-col :span="6">
+          <div>{{ item.count }}</div>
+        </el-col>
+        <el-col :span="6">
+          <div>{{ item.price * item.count }}</div>
+        </el-col>
+      </el-row>
+      <!-- 去结算 -->
+      <div class="js_box">
+        <p>合计（不含运费）：{{ total }}</p>
+        <el-button @click="toPay" type="primary">去结算</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -73,8 +77,8 @@ export default {
         this.total += item.count * this.laptop[index].price;
         // console.log(this.total);
       });
-      // console.log(this.cart);
-      // console.log(this.laptop);
+      console.log(this.cart);
+      console.log(this.laptop);
     },
   },
   // mounted 挂载时
@@ -88,6 +92,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.qbsp_box{
+  color: #409EFF;
+  font-size: 30px;
+  font-weight: bolder;
+  border-bottom: 5px solid #409EFF;
+  padding: 15px 0;
+  width: 120px;
+}
 .js_box p {
   margin-right: 30px;
 }

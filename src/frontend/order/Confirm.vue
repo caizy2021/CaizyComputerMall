@@ -1,12 +1,6 @@
 <template>
   <div>
-    <!-- 步骤条模块 -->
-    <el-steps :active="active" finish-status="success">
-      <el-step title="步骤 1"></el-step>
-      <el-step title="步骤 2"></el-step>
-      <el-step title="步骤 3"></el-step>
-    </el-steps>
-
+    <div class="dz_box">收货地址</div>
     <!-- 地址模块 -->
     <el-descriptions title="用户地址">
       <el-descriptions-item label="姓名">{{
@@ -15,14 +9,20 @@
       <el-descriptions-item label="手机号">{{
         address.cellphone
       }}</el-descriptions-item>
+      <el-descriptions-item label="固定电话">{{
+        address.fixedphone
+      }}</el-descriptions-item>
       <el-descriptions-item label="居住地">{{
         address.city
+      }}</el-descriptions-item>
+      <el-descriptions-item label="邮政编码">{{
+        address.postcode
       }}</el-descriptions-item>
       <el-descriptions-item label="备注">
         <el-tag size="small">{{ address.tag }}</el-tag>
       </el-descriptions-item>
       <el-descriptions-item label="联系地址">{{
-        address.city + address.county + address.address
+        address.province + address.city + address.county + address.address
       }}</el-descriptions-item>
     </el-descriptions>
 
@@ -56,11 +56,6 @@
           <div>{{ item.price * item.count }}</div>
         </el-col>
       </el-row>
-      <!-- 去结算 -->
-      <div class="js_box">
-        <p>合计（不含运费）：{{ total }}</p>
-        <el-button @click="next" type="primary">确认并付款</el-button>
-      </div>
     </div>
   </div>
 </template>
@@ -75,7 +70,6 @@ export default {
       laptop: [], // 购物车对应的商品数据
       address: [], // 地址数据
       total: 0, // 总价
-      active: 0, // 步骤条
     };
   },
   // 挂载
@@ -87,12 +81,7 @@ export default {
     // 购物车方法
     this.getMyCart();
   },
-  // 方法
   methods: {
-    // 步骤条
-    next() {
-      if (this.active++ > 2) this.active = 0;
-    },
     // 请求用户地址方法
     async getAddress() {
       let url = "address?user_id=" + this.user_id;
@@ -123,6 +112,7 @@ export default {
         this.total += item.count * this.laptop[index].price;
         // console.log(this.total);
       });
+      window.sessionStorage.setItem("total", this.total);
       // console.log(this.cart);
       // console.log(this.laptop);
     },
@@ -131,18 +121,26 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.dz_box{
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #ddd;
+  box-shadow: 0 0 15px #aaa;
+  font-size: 24px;
+  text-align: center;
+}
 .title_div {
   font-weight: bolder;
   margin-bottom: 10px;
 }
 .zy_p {
   font-weight: bolder;
-  color: #0aa1ed;
+  color: #409EFF;
 }
 .el-descriptions {
   // border: 1px solid gray;
   background-color: #fff;
-  margin: 30px 0px;
+  margin-bottom: 30px;
   padding: 15px;
   box-shadow: 0 0 20px #777;
 }

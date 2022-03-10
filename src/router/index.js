@@ -38,7 +38,7 @@ const routes = [
         path: "order",
         name: "order",
         component: () =>
-          import(/* webpackChunkName: "details" */ "../frontend/Order.vue"),
+          import(/* webpackChunkName: "details" */ "../frontend/order/Order.vue"),
       },
       // 收藏夹
       {

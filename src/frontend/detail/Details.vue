@@ -72,6 +72,7 @@
               :key="i"
               plain
               v-text="sp.spec"
+              @click="changeLid(i)"
             ></el-button>
 
             <!-- <router-link class="sp_link" v-for="(sp, i) in specs" :key="i" :to="`/details/${sp.lid}`">
@@ -94,8 +95,8 @@
 
         <!-- 购买部分 -->
         <div>
-          <el-button @click="toCart" type="danger">加入购物车</el-button>
-          <el-button type="info" plain>立即购买</el-button>
+          <el-button @click="toCart()" type="danger">加入购物车</el-button>
+          <!-- <el-button type="info" plain>立即购买</el-button> -->
           <el-button
             type="danger"
             icon="el-icon-star-off"
@@ -150,23 +151,39 @@
 export default {
   data() {
     return {
-      p: { price: 0 },
-      specs: [],
-      pics: [{}],
-
+      p: { price: 0 }, // 价格
+      specs: [], // 规格
+      pics: [{}], // 商品图
+      lid: this.$route.query.lid, // 获取 lid
+      uid: sessionStorage.getItem("uid"), // 获取 uid
+      newlid: 0,
       i: 0, //当前正在看第几张
-      num: 1,
+      num: 1, // 商品数量
     };
   },
   methods: {
+    // 点击规格更新lid
+    changeLid(index) {
+      // console.log(index);
+      this.newlid = this.lid - 0 + index;
+      console.log(
+        `user_id=${this.uid}&product_id=${this.newlid}&count=${this.num}&is_checked=1`
+      );
+    },
     // 点击'加入购物车'时触发
-    toCart() {
+    async toCart() {
       // 跳转到购物车
-      this.$router.push("/cart");
+      const sql = `/cart/add?user_id=${this.uid}&product_id=${this.newlid}&count=${this.num}&is_checked=1`;
+      console.log(sql);
+      const { data: res } = await this.$axios.get(sql);
+      console.log(res);
+      // this.$axios.post("/cart/add", this.body).then((res) => {
+      //   console.log(res);
+      // });
     },
 
     handleChange(value) {
-      console.log(value);
+      console.log(`count=${value}`);
     },
     // 点小图切换大图
     clickImgSM(i) {
@@ -175,8 +192,7 @@ export default {
     },
     // 获取商品详情的方法
     async getDetails() {
-      const lid = this.$route.query.lid;
-      const url = "/details?lid=" + lid;
+      const url = "/details?lid=" + this.lid;
       const { data: res } = await this.$axios.get(url);
       console.log(res);
       // console.log(res);
@@ -193,6 +209,8 @@ export default {
   mounted() {
     console.log(`页面内容挂载完成之后发送请求...`);
     this.getDetails();
+    this.changeLid(0);
+
     // let lid = this.$route.query.lid;
     // console.log("mountedlid:" + lid);
     // let url = "product/details.php?lid=" + lid;
