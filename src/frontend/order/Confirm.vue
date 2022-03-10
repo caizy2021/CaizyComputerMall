@@ -1,30 +1,35 @@
 <template>
   <div>
-    <div class="dz_box">收货地址</div>
+    <div class="dz_box">选择您的收货地址</div>
     <!-- 地址模块 -->
-    <el-descriptions title="用户地址">
-      <el-descriptions-item label="姓名">{{
-        address.receiver
-      }}</el-descriptions-item>
-      <el-descriptions-item label="手机号">{{
-        address.cellphone
-      }}</el-descriptions-item>
-      <el-descriptions-item label="固定电话">{{
-        address.fixedphone
-      }}</el-descriptions-item>
-      <el-descriptions-item label="居住地">{{
-        address.city
-      }}</el-descriptions-item>
-      <el-descriptions-item label="邮政编码">{{
-        address.postcode
-      }}</el-descriptions-item>
-      <el-descriptions-item label="备注">
-        <el-tag size="small">{{ address.tag }}</el-tag>
-      </el-descriptions-item>
-      <el-descriptions-item label="联系地址">{{
-        address.province + address.city + address.county + address.address
-      }}</el-descriptions-item>
-    </el-descriptions>
+    <el-radio-group
+      v-model="radio"
+      v-for="(item, index) in address"
+      :key="index"
+    >
+      <el-radio :label="index">
+        <el-descriptions :title="`收货地址${index+1}`">
+          <el-descriptions-item label="姓名">{{
+            item.receiver
+          }}</el-descriptions-item>
+          <el-descriptions-item label="手机号">{{
+            item.cellphone
+          }}</el-descriptions-item>
+          <el-descriptions-item label="居住地">{{
+            item.city
+          }}</el-descriptions-item>
+          <el-descriptions-item label="备注">
+            <el-tag size="small">{{ item.tag }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="联系地址">{{
+            item.province + item.city + item.county + item.address
+          }}</el-descriptions-item>
+        </el-descriptions>
+        <el-button @click="deleteAddress(item.aid)" type="danger" size="mini"
+          >删除</el-button
+        >
+      </el-radio>
+    </el-radio-group>
 
     <!-- 购物车模块 -->
     <div>
@@ -70,6 +75,7 @@ export default {
       laptop: [], // 购物车对应的商品数据
       address: [], // 地址数据
       total: 0, // 总价
+      radio: 0,
     };
   },
   // 挂载
@@ -82,13 +88,24 @@ export default {
     this.getMyCart();
   },
   methods: {
+    // 删除对应地址方法
+    async deleteAddress(aid) {
+      // console.log(aid);
+      const sql = "address/delete?aid=" + aid;
+      // console.log(sql);
+      const { data: res } = await this.$axios.get(sql);
+      if (res.code == 200) {
+        this.$message.success("地址删除成功");
+        this.getAddress();
+      }
+    },
     // 请求用户地址方法
     async getAddress() {
       let url = "address?user_id=" + this.user_id;
       const { data: res } = await this.$axios.get(url);
       // console.log(res);
       // console.log(res[0]);
-      this.address = res[0];
+      this.address = res;
       console.log(this.address);
     },
 
@@ -121,8 +138,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.dz_box{
-  margin-bottom: 15px;
+.el-descriptions{
+  margin-top: 15px;
+}
+.dz_box {
+  // margin-bottom: 15px;
   padding: 15px;
   background-color: #ddd;
   box-shadow: 0 0 15px #aaa;
@@ -135,14 +155,22 @@ export default {
 }
 .zy_p {
   font-weight: bolder;
-  color: #409EFF;
+  color: #409eff;
 }
-.el-descriptions {
+.el-radio-group {
   // border: 1px solid gray;
+  display: flex;
+  flex-flow: column;
+}
+.el-radio-group .el-radio {
   background-color: #fff;
-  margin-bottom: 30px;
+  margin: 0;
+  margin-top: 15px;
   padding: 15px;
-  box-shadow: 0 0 20px #777;
+  box-shadow: 0 0 15px #777;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .js_box p {
   margin-right: 30px;
@@ -166,6 +194,7 @@ export default {
 }
 .msg_box {
   margin-bottom: 15px;
+  margin-top: 30px;
   background-color: #ddd;
   box-shadow: 0 0 15px #aaa;
   display: flex;

@@ -44,7 +44,7 @@ export default {
     return {
       // 登录表单的数据绑定对象
       form: {
-        uname: "dingding",
+        uname: "caizy",
         upwd: "123456",
       },
       // 表单的验证规则对象

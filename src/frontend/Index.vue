@@ -16,10 +16,10 @@
           router
         >
           <el-menu-item index="main">首页</el-menu-item>
-          <el-menu-item index="cart"> 购物车 </el-menu-item>
+          <el-menu-item index="cart">我的购物车</el-menu-item>
           <el-menu-item index="order">我的订单</el-menu-item>
-          <el-menu-item index="collect">收藏夹</el-menu-item>
-          <el-menu-item index="center">个人中心</el-menu-item>
+          <!-- <el-menu-item index="collect">收藏夹</el-menu-item> -->
+          <el-menu-item index="personal">个人中心</el-menu-item>
         </el-menu>
       </div>
 

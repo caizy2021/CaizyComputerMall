@@ -13,6 +13,7 @@
         <el-col :span="6"><p>单价（元）</p></el-col>
         <el-col :span="6"><p>数量</p></el-col>
         <el-col :span="6"><p>金额</p></el-col>
+        <el-col :span="6"><p>操作</p></el-col>
       </el-row>
       <!-- 购物车div -->
       <el-row class="cart_box" v-for="(item, index) in laptop" :key="index">
@@ -30,6 +31,11 @@
         </el-col>
         <el-col :span="6">
           <div>{{ item.price * item.count }}</div>
+        </el-col>
+        <el-col :span="6">
+          <el-button @click="delItem(item.iid)" type="danger" size="mini"
+            >删除</el-button
+          >
         </el-col>
       </el-row>
       <!-- 去结算 -->
@@ -52,6 +58,18 @@ export default {
     };
   },
   methods: {
+    // 删除对应商品
+    async delItem(iid) {
+      // console.log(`删除${iid}商品`);
+      const sql = "/cart/delete?iid=" + iid;
+      // console.log(sql);
+      // 发送删除请求
+      const { data: res } = await this.$axios.get(sql);
+      if(res.code==200) this.$message.success('删除对应商品成功')
+      // 刷新购物车
+      this.getMyCart();
+    },
+
     // 点击'去结算'按钮触发
     toPay() {
       this.$router.push("/order");
@@ -73,11 +91,12 @@ export default {
         // console.log(index);
         // 保存数量 count
         this.laptop[index].count = item.count;
+        this.laptop[index].iid = item.iid;
         // 计算总金额 total
         this.total += item.count * this.laptop[index].price;
         // console.log(this.total);
       });
-      console.log(this.cart);
+      // console.log(this.cart);
       console.log(this.laptop);
     },
   },
@@ -92,11 +111,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.qbsp_box{
-  color: #409EFF;
+.qbsp_box {
+  color: #409eff;
   font-size: 30px;
   font-weight: bolder;
-  border-bottom: 5px solid #409EFF;
+  border-bottom: 5px solid #409eff;
   padding: 15px 0;
   width: 120px;
 }

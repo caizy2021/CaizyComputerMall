@@ -176,10 +176,10 @@ export default {
       const sql = `/cart/add?user_id=${this.uid}&product_id=${this.newlid}&count=${this.num}&is_checked=1`;
       console.log(sql);
       const { data: res } = await this.$axios.get(sql);
-      console.log(res);
-      // this.$axios.post("/cart/add", this.body).then((res) => {
-      //   console.log(res);
-      // });
+      // console.log(res);
+      if (res.code == 200) {
+        this.$message.success("加入购物车成功");
+      }
     },
 
     handleChange(value) {
