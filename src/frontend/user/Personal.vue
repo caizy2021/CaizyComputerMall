@@ -3,7 +3,9 @@
     <div class="title_box">个人中心</div>
     <div class="msg_box">用户{{ this.uname }}的个人中心</div>
     <div class="per_box">
-      <el-button @click="toInsertAddress" type="primary">添加收货地址</el-button>
+      <el-button @click="toInsertAddress" type="primary"
+        >添加收货地址</el-button
+      >
     </div>
     <div class="per_box">
       <el-descriptions
@@ -20,35 +22,35 @@
             <i class="el-icon-user"></i>
             姓名
           </template>
-          {{ userdetail.user_name }}
+          {{ userForm.user_name }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-mobile-phone"></i>
             手机号
           </template>
-          {{ userdetail.phone }}
+          {{ userForm.phone }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-s-custom"></i>
             邮箱
           </template>
-          {{ userdetail.email }}
+          {{ userForm.email }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-s-custom"></i>
             性别
           </template>
-          {{ userdetail.gender ? "男" : "女" }}
+          {{ userForm.gender ? "男" : "女" }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-view"></i>
             用户名
           </template>
-          {{ userdetail.uname }}
+          {{ userForm.uname }}
         </el-descriptions-item>
       </el-descriptions>
     </div>
@@ -61,7 +63,7 @@ export default {
     return {
       uname: sessionStorage.getItem("uname"), // 用户名
       uid: sessionStorage.getItem("uid"), // 用户ID
-      userdetail: [], // 存储用户信息
+      userForm: { uid: this.uid }, // 存储用户信息
     };
   },
   // 挂载
@@ -71,16 +73,16 @@ export default {
   // 方法
   methods: {
     // 点击跳转到添加地址页面
-    toInsertAddress(){
-      this.$router.push('/address')
+    toInsertAddress() {
+      this.$router.push("/address");
     },
     // 获取用户信息
     async getUserDetail() {
       const sql = `/user/detail?uid=${this.uid}`;
       const { data: res } = await this.$axios.get(sql);
       this.$message.success("获取用户信息成功");
-      this.userdetail = res.data;
-      console.log(this.userdetail);
+      this.userForm = res.data;
+      console.log(this.userForm);
     },
   },
 };
