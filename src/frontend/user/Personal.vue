@@ -3,7 +3,7 @@
     <div class="title_box">个人中心</div>
     <div class="msg_box">用户{{ this.uname }}的个人中心</div>
     <div class="per_box">
-      <el-button @click="toInsertAddress" type="primary">管理地址</el-button>
+      <el-button @click="toInsertAddress" type="primary">添加收货地址</el-button>
     </div>
     <div class="per_box">
       <el-descriptions
@@ -72,7 +72,7 @@ export default {
   methods: {
     // 点击跳转到添加地址页面
     toInsertAddress(){
-      this.$router.push('')
+      this.$router.push('/address')
     },
     // 获取用户信息
     async getUserDetail() {

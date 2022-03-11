@@ -75,7 +75,6 @@ export default {
   methods: {
     // 点击重置按钮，重置登录表单
     resetLoginFrom() {
-      //
       this.$refs.loginFormRef.resetFields();
     },
 
@@ -123,6 +122,9 @@ export default {
       });
 */
     },
+  },
+  mounted(){
+    this.$message.warning('请先登录')
   },
 };
 </script>

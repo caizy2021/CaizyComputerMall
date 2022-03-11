@@ -23,8 +23,14 @@
         </el-menu>
       </div>
 
+      <!-- 登录 -->
+      <div class="login_box" v-if="!uname">
+        <el-button type="info" @click="toRegister">注册</el-button>
+        <el-button type="primary" @click="toLogin">登录</el-button>
+      </div>
+
       <!-- 用户信息 -->
-      <div class="header_user">
+      <div class="header_user" v-if="uname">
         <div class="user_uname">欢迎你！{{ uname }}</div>
         <el-button type="info" @click="logout">退出</el-button>
       </div>
@@ -55,16 +61,30 @@ export default {
     };
   },
   methods: {
+    // 去注册
+    toRegister() {
+      this.$router.push("/register");
+    },
+    // 去登录
+    toLogin() {
+      this.$router.push("/login");
+    },
+    // 登出
     logout() {
       window.sessionStorage.clear();
-      this.$message.warning('退出成功');
-      this.$router.push('/login')
+      this.$message.warning("退出成功");
+      this.$router.push("/login");
     },
   },
 };
 </script>
 
 <style lang="less" scoped>
+.login_box {
+  display: flex;
+  align-items: center;
+}
+
 .index_container {
   height: 100%;
   .el-header {
@@ -89,6 +109,7 @@ export default {
       align-items: center;
       .user_uname {
         margin-right: 20px;
+        text-align: center;
       }
     }
   }
