@@ -32,7 +32,7 @@
         </el-form-item>
         <!-- 性别 -->
         <el-form-item label="性别" prop="gender">
-          <el-select v-model="addForm.gender" placeholder="请选择活动区域">
+          <el-select v-model="addForm.gender" placeholder="请选择性别">
             <el-option label="男" value="1"></el-option>
             <el-option label="女" value="0"></el-option>
           </el-select>

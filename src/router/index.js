@@ -103,9 +103,9 @@ router.beforeEach((to, from, next) => {
   if (to.path === "/main") return next();
   if (to.path === "/login") return next();
   if (to.path === "/register") return next();
-  // 获取token
-  const tokenStr = window.sessionStorage.getItem("uid");
-  if (!tokenStr) return next("/login");
+  // 获取uid
+  const uidStr = window.sessionStorage.getItem("uid");
+  if (!uidStr) return next("/login");
   next();
 });
 
